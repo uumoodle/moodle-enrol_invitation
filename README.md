@@ -2,8 +2,8 @@
 
 Invitation enrollment plugin for Moodle
 =======================================
-![PHP](https://img.shields.io/badge/PHP-v5.6%20%2F%20v7.0%20%2F%20v7.1%2F%20v7.2%2F%20v7.3%2F%20v7.4-blue.svg)
-![Moodle](https://img.shields.io/badge/Moodle-v2.6%20to%20v4.0.x-orange.svg)
+![PHP](https://img.shields.io/badge/PHP-v7.4%20to%20v8.3-blue.svg)
+![Moodle](https://img.shields.io/badge/Moodle-v2.6%20to%20v4.5-orange.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/michael-milette/moodle-enrol_invitation.svg)](https://github.com/michael-milette/moodle-enrol_invitation/issues)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-green.svg)](#contributing)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](#license)
@@ -131,6 +131,7 @@ Note that you can use any of the following plain text tags within the body of th
 * {$a->emailmsgunsubscribe} : Unsubscribe/Support message.
 * {$a->email} : Invitees email address - always available.
 * {$a->username} : Invitees username - only available if the user already has an account on the site, otherwise blank.
+* {$a->userfullname} : Invitees formatted full name - only available if the user already has an account on the site, otherwise blank.
 * {$a->firstname} : Invitees first name - only available if the user already has an account on the site, otherwise blank.
 * {$a->lastname} : Invitees last name - only available if the user already has an account on the site, otherwise blank.
 * {$a->surname} : This is an alias for {$a->lastname}.
@@ -225,6 +226,9 @@ Michael Milette - Author and Lead Developer
 
 Big thank you to the following contributors. (Please let me know if I forgot to include you in the list):
 
+* Chandra Kishor (developerck) - Fixed compatibility issue with Moodle versions prior to v3.11.
+* Phillip Fickl (phillipfickl) - Add instance to new coures by default. (2023)
+* MSVermet - Case insensitive comparison between invitation email and user email. (2023)
 * [Jerome Mouneyrac](http://www.moodleitandme.com) for his work on the original [invitation enrollment plug-in](https://github.com/mouneyrac/moodle-enrol_invitation) in which this one is based upon.
 * The staff, faculty, and students at the University of California, Los Angeles (UCLA) that were involved in creating the additional use cases, development, and refinement to this tool.
 
@@ -246,7 +250,7 @@ https://github.com/michael-milette/moodle-enrol_invitation
 
 # License
 
-Copyright © 2021-2022 TNG Consulting Inc. - https://www.tngconsulting.ca/
+Copyright © 2021-2024 TNG Consulting Inc. - https://www.tngconsulting.ca/
 
 This file is part of Invitation for Moodle - https://moodle.org/
 

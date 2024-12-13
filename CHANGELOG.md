@@ -1,6 +1,39 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.2.2] - 2024-10-13
+### Added
+- Option to automatically add instance to new courses.
+### Updated
+- Fixed support for plain text tag called {$a->userfullname}.
+- Fixed compatibility issue with Moodle versions prior to v3.11.
+- Fixed deprecation notice running on PHP 8.3.
+- Compatible with Moodle up to v4.5.
+
+## [2.2.1] - 2024-04-28
+Note: There are no changes to the code in this release.
+### Added
+- Github CI Workflows.
+- Github security reporting
+### Updated
+- Code updated to latest Moodle coding guidelines.
+- Bug reporting form.
+- Renamed LICENSE to LICENSE.txt
+- Tested compatible and tested with Moodle 3.9, 3.10, 3.11, 4.0, 4.1, 4.2, 4.3 and 4.4.
+- Compatible with Moodle up to v4.4.
+- Updated copyright notice for 2024.
+
+## [2.2.1] - 2023-10-24
+### Added
+- Ability to self-unenrol from the course.
+### Updated
+- Ability to unenrol a student from the course.
+- Fixed formatting in list of 'Assign roles' field for clarity.
+- Code refactoring for compliance with Moodle coding guidelines.
+- Case insensitive comparison between invitation email and user email
+- Now compatible and tested with Moodle 3.9, 3.10, 3.11, 4.0, 4.1, 4.2 and 4.3.
+- Now compatible with PHP 7.4 to 8.2.
+
 ## [2.2.0] - 2023-07-04
 ### Added
 - Support for plain text tag called {$a->firstname} in the body of the invitation message.

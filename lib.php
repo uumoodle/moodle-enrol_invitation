@@ -18,7 +18,8 @@
  * Library file to include classes and functions used.
  *
  * @package    enrol_invitation
- * @copyright  2021-2023 TNG Consulting Inc. {@link https://www.tngconsulting.ca}
+ * @copyright  2021-2024 TNG Consulting Inc. {@link https://www.tngconsulting.ca}
+ * @author     Michael Milette
  * @copyright  2013 UC Regents
  * @copyright  2011 Jerome Mouneyrac {@link http://www.moodleitandme.com}
  * @author     Jerome Mouneyrac
@@ -33,7 +34,6 @@
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrol_invitation_plugin extends enrol_plugin {
-
     /**
      * Returns optional enrolment information icons.
      *
@@ -47,8 +47,7 @@ class enrol_invitation_plugin extends enrol_plugin {
      * @return array of pix_icon.
      */
     public function get_info_icons(array $instances) {
-        return array(new pix_icon('icon', get_string('pluginname',
-                'enrol_invitation'), 'enrol_invitation'));
+        return [new pix_icon('icon', get_string('pluginname', 'enrol_invitation'), 'enrol_invitation')];
     }
 
     /**
@@ -85,17 +84,16 @@ class enrol_invitation_plugin extends enrol_plugin {
 
         $context = context_course::instance($courseid, MUST_EXIST);
 
-        if (!has_capability('moodle/course:enrolconfig', $context)
-                or!has_capability('enrol/invitation:config', $context)) {
+        if (!has_capability('moodle/course:enrolconfig', $context) || !has_capability('enrol/invitation:config', $context)) {
             return null;
         }
 
         // We don't want more than one instance per course.
-        if ($DB->record_exists('enrol', array('courseid' => $courseid, 'enrol' => 'invitation'))) {
+        if ($DB->record_exists('enrol', ['courseid' => $courseid, 'enrol' => 'invitation'])) {
             return null;
         }
 
-        return new moodle_url('/enrol/invitation/edit.php', array('courseid' => $courseid));
+        return new moodle_url('/enrol/invitation/edit.php', ['courseid' => $courseid]);
     }
 
     /**
@@ -105,15 +103,48 @@ class enrol_invitation_plugin extends enrol_plugin {
      * @param array $fields
      * @return int              Id of instance, null if can not be created.
      */
-    public function add_instance($course, array $fields = null) {
+    public function add_instance($course, ?array $fields = null) {
         global $DB;
 
-        if ($result = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' => 'invitation'))) {
+        if ($result = $DB->get_record('enrol', ['courseid' => $course->id, 'enrol' => 'invitation'])) {
             // Instance already exists, so just give id.
             return $result->id;
         }
 
         return parent::add_instance($course, $fields);
+    }
+
+    /**
+     * Returns defaults for new instances.
+     *
+     * @return array
+     */
+    public function get_instance_defaults($course) {
+        $fields = [];
+        $fields['status'] = $this->get_config('status');
+        $fields['name'] = '';
+        $fields['customint1'] = 0;
+        $fields['customint2'] = 3;
+        $fields['customint3'] = 0;
+        $fields['customint4'] = 0;
+        $fields['customint5'] = 0;
+        $fields['customint6'] = 0;
+        $fields['customchar1'] = get_string('default_subject', 'enrol_invitation', getcoursesubject($course));
+        $fields['customtext1'] = '';
+
+        return $fields;
+    }
+
+    /**
+     * Add new instance of enrol plugin with default settings.
+     *
+     * @param stdClass $course
+     * @return int id of new instance
+     */
+    public function add_default_instance($course) {
+        $fields = $this->get_instance_defaults($course);
+
+        return $this->add_instance($course, $fields);
     }
 
     /**
@@ -127,7 +158,7 @@ class enrol_invitation_plugin extends enrol_plugin {
     public function restore_instance(restore_enrolments_structure_step $step, stdClass $data, $course, $oldid) {
         global $DB;
 
-        if ($instance = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' => $this->get_name()))) {
+        if ($instance = $DB->get_record('enrol', ['courseid' => $course->id, 'enrol' => $this->get_name()])) {
             $instanceid = $instance->id;
         } else {
             $instanceid = $this->add_instance($course, (array)$data);
@@ -181,7 +212,7 @@ class enrol_invitation_plugin extends enrol_plugin {
         }
         $context = context_course::instance($instance->courseid);
 
-        $icons = array();
+        $icons = [];
 
         if (has_capability('enrol/invitation:config', $context)) {
             $editlink = new moodle_url("/enrol/invitation/edit.php", ['courseid' => $instance->courseid, 'id' => $instance->id]);
@@ -199,7 +230,6 @@ class enrol_invitation_plugin extends enrol_plugin {
      * @return string html text, usually a form in a text box
      */
     public function enrol_page_hook(stdClass $instance) {
-
     }
 
     /**
@@ -216,13 +246,13 @@ class enrol_invitation_plugin extends enrol_plugin {
         global $CFG;
 
         $instance = null;
-        $instances = array();
+        $instances = [];
         foreach ($manager->get_enrolment_instances() as $tempinstance) {
             if ($tempinstance->enrol == 'invitation') {
                 if ($instance === null) {
                     $instance = $tempinstance;
                 }
-                $instances[] = array('id' => $tempinstance->id, 'name' => $this->get_instance_name($tempinstance));
+                $instances[] = ['id' => $tempinstance->id, 'name' => $this->get_instance_name($tempinstance)];
             }
         }
         if (empty($instance)) {
@@ -231,10 +261,11 @@ class enrol_invitation_plugin extends enrol_plugin {
 
         $context = context_course::instance($instance->courseid);
         if (has_capability('enrol/invitation:enrol', $context)) {
-            $invitelink = new moodle_url('/enrol/invitation/invitation.php',
-                    array('courseid' => $instance->courseid, 'id' => $instance->id));
-            $button = new enrol_user_button($invitelink,
-                    get_string('inviteusers', 'enrol_invitation'), 'get');
+            $invitelink = new moodle_url(
+                '/enrol/invitation/invitation.php',
+                ['courseid' => $instance->courseid, 'id' => $instance->id]
+            );
+            $button = new enrol_user_button($invitelink, get_string('inviteusers', 'enrol_invitation'), 'get');
             return $button;
         } else {
             return false;
@@ -249,20 +280,28 @@ class enrol_invitation_plugin extends enrol_plugin {
      * @return array An array of user_enrolment_actions
      */
     public function get_user_enrolment_actions(course_enrolment_manager $manager, $ue) {
-        $actions = array();
+        $actions = [];
         $context = $manager->get_context();
         $instance = $ue->enrolmentinstance;
         $params = $manager->get_moodlepage()->url->params();
         $params['ue'] = $ue->id;
         if ($this->allow_manage($instance) && has_capability("enrol/invitation:manage", $context)) {
             $url = new moodle_url('/enrol/invitation/editenrolment.php', $params);
-            $actions[] = new user_enrolment_action(new pix_icon('t/edit', ''), get_string('edit'), $url,
-                    array('class' => 'editenrollink', 'rel' => $ue->id));
+            $actions[] = new user_enrolment_action(
+                new pix_icon('t/edit', ''),
+                get_string('edit'),
+                $url,
+                ['class' => 'editenrollink', 'rel' => $ue->id]
+            );
         }
         if ($this->allow_unenrol($instance) && has_capability("enrol/invitation:unenrol", $context)) {
-            $url = new moodle_url('/enrol/invitation/unenroluser.php', $params);
-            $actions[] = new user_enrolment_action(new pix_icon('t/delete', ''), get_string('unenrol', 'enrol'),
-                    $url, array('class' => 'unenrollink', 'rel' => $ue->id));
+            $url = new moodle_url('/enrol/unenroluser.php', $params);
+            $actions[] = new user_enrolment_action(
+                new pix_icon('t/delete', ''),
+                get_string('unenrol', 'enrol'),
+                $url,
+                ['class' => 'unenrollink', 'rel' => $ue->id]
+            );
         }
         return $actions;
     }
@@ -304,11 +343,9 @@ class enrol_invitation_plugin extends enrol_plugin {
      * @return array
      */
     protected function get_status_options() {
-        $options = array(ENROL_INSTANCE_ENABLED  => get_string('yes'),
-                         ENROL_INSTANCE_DISABLED => get_string('no'));
+        $options = [ENROL_INSTANCE_ENABLED  => get_string('yes'), ENROL_INSTANCE_DISABLED => get_string('no')];
         return $options;
     }
-
 }
 
 /**
@@ -318,16 +355,23 @@ class enrol_invitation_plugin extends enrol_plugin {
  * @return string Formatted name of course subject.
  */
 function getcoursesubject($course) {
-    switch(get_config('enrol_invitation', 'defaultsubjectformat') ?? '') {
+    switch (get_config('enrol_invitation', 'defaultsubjectformat') ?? '') {
         case 'custom':
-            $subject = get_string('customsubjectformat', 'enrol_invitation',
-                    (object)['shortname' => $course->shortname, 'fullname' => $course->fullname]);
+            $subject = get_string(
+                'customsubjectformat',
+                'enrol_invitation',
+                (object)['shortname' => $course->shortname, 'fullname' => $course->fullname]
+            );
             break;
         case 'shortname':
             $subject = $course->shortname;
             break;
         default: // Fullname.
-            $subject = $course->fullname;
+            if (isset($course->fullname)) {
+                $subject = $course->fullname;
+            } else {
+                return "";
+            }
     }
     return $subject;
 }
