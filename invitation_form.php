@@ -86,7 +86,7 @@ class invitation_form extends moodleform {
             'textarea',
             'email',
             get_string('emailaddressnumber', 'enrol_invitation'),
-            ['maxlength' => 1000, 'class' => 'form-invite-email', 'style' => 'resize: both;', 'cols' => 65, 'rows' => 5]
+            ['maxlength' => 30000, 'class' => 'form-invite-email', 'style' => 'resize: both;', 'cols' => 65, 'rows' => 5]
         );
         $mform->setType('email', PARAM_TEXT);
         // Check for correct email formatting later in validation() function.
@@ -382,7 +382,7 @@ class invitation_email_form extends moodleform {
             'textarea',
             'email',
             get_string('emailaddressnumber', 'enrol_invitation'),
-            ['maxlength' => 1000, 'class' => 'form-invite-email', 'style' => 'resize: both;', 'cols' => 65, 'rows' => 5]
+            ['maxlength' => 30000, 'class' => 'form-invite-email', 'style' => 'resize: both;', 'cols' => 65, 'rows' => 5]
         );
         $registeredonly = $this->_customdata['registeredonly'] ? '<br>'
             . get_string('registeredonly_help', 'enrol_invitation') : '';
